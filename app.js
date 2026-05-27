@@ -100,9 +100,10 @@ function getAverageTime() {
 
 function updateSummary() {
   const sorted = getSortedEntries();
+  const average = getAverageTime();
   document.querySelector("#total-athletes").textContent = entries.length;
   document.querySelector("#best-time").textContent = sorted[0] ? formatTime(sorted[0].finishSeconds) : "--:--";
-  document.querySelector("#avg-time").textContent = getAverageTime() ? formatTime(getAverageTime()) : "--:--";
+  document.querySelector("#avg-time").textContent = average ? formatTime(average) : "--:--";
 }
 
 function renderLeaderboard() {
@@ -117,10 +118,11 @@ function renderLeaderboard() {
   sorted.forEach((entry, index) => {
     const score = getEfficiencyScore(entry);
     const projected = getProjectedBest(entry);
+    const screenshotLabel = entry.screenshotData ? "Strava screenshot attached" : "No screenshot attached";
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><span class="rank-badge ${index < 3 ? "top" : ""}">${index + 1}</span></td>
-      <td>${escapeHtml(entry.name)}<span class="metric-muted">${escapeHtml(entry.notes || "No notes added")}</span></td>
+      <td>${escapeHtml(entry.name)}<span class="metric-muted">${escapeHtml(entry.notes || screenshotLabel)}</span></td>
       <td>${formatTime(entry.finishSeconds)}</td>
       <td>${entry.avgHr} bpm<span class="metric-muted">Max ${entry.maxHr} bpm</span></td>
       <td>${entry.redZone}%</td>
@@ -162,10 +164,17 @@ function renderStory() {
     ? `They were ${formatGap(Math.abs(gapToAverage))} faster than the group average.`
     : `They were ${formatGap(gapToAverage)} slower than the group average.`;
 
+  const screenshot = latest.screenshotData
+    ? `<figure class="screenshot-preview"><img src="${latest.screenshotData}" alt="Strava heart-rate screenshot for ${escapeHtml(latest.name)}" /><figcaption>Strava screenshot attached for visual review.</figcaption></figure>`
+    : "";
+
   storyOutput.innerHTML = `
-    <strong>${escapeHtml(latest.name)}</strong> finished in <strong>${formatTime(latest.finishSeconds)}</strong>. ${comparison} ${averageText}
-    Their efficiency score is <strong>${efficiency}/100</strong>, with average heart rate at <strong>${latest.avgHr} bpm</strong> (${Math.round(intensity * 100)}% of max) and <strong>${latest.redZone}%</strong> of the effort in the red zone.
-    ${pacingRead} Based on the current model, a cleaner attempt could land around <strong>${formatTime(projected)}</strong>, a gain of roughly <strong>${projectedGain} seconds</strong>.
+    <div class="story-copy">
+      <strong>${escapeHtml(latest.name)}</strong> finished in <strong>${formatTime(latest.finishSeconds)}</strong>. ${comparison} ${averageText}
+      Their efficiency score is <strong>${efficiency}/100</strong>, with average heart rate at <strong>${latest.avgHr} bpm</strong> (${Math.round(intensity * 100)}% of max) and <strong>${latest.redZone}%</strong> of the effort in the red zone.
+      ${pacingRead} Based on the current model, a cleaner attempt could land around <strong>${formatTime(projected)}</strong>, a gain of roughly <strong>${projectedGain} seconds</strong>.
+    </div>
+    ${screenshot}
   `;
 }
 
@@ -174,6 +183,17 @@ function formatGap(seconds) {
   const remainder = seconds % 60;
   if (minutes === 0) return `${remainder} seconds`;
   return `${minutes}m ${String(remainder).padStart(2, "0")}s`;
+}
+
+function readScreenshot(file) {
+  if (!file || !file.type.startsWith("image/")) return Promise.resolve("");
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Unable to read screenshot"));
+    reader.readAsDataURL(file);
+  });
 }
 
 function renderChart() {
@@ -211,7 +231,7 @@ function renderChart() {
     ctx.fillStyle = score >= 66 ? "#24724f" : score >= 54 ? "#a66a13" : "#c92f2f";
     ctx.fillRect(left, y + 4, barWidth, 18);
     ctx.fillStyle = "#607066";
-    ctx.fillText(`${formatTime(entry.finishSeconds)} · ${score}/100`, left + barWidth + 10, y + 19);
+    ctx.fillText(`${formatTime(entry.finishSeconds)} - ${score}/100`, left + barWidth + 10, y + 19);
   });
 }
 
@@ -231,7 +251,7 @@ function render() {
   renderChart();
 }
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const formData = new FormData(form);
   const finishSeconds = parseFinishSeconds(formData);
@@ -241,6 +261,8 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
+  const screenshotData = await readScreenshot(formData.get("screenshot"));
+
   entries.push({
     id: crypto.randomUUID(),
     name: formData.get("athleteName").trim(),
@@ -248,6 +270,7 @@ form.addEventListener("submit", (event) => {
     avgHr: Number(formData.get("avgHr")),
     maxHr: Number(formData.get("maxHr")),
     redZone: Number(formData.get("redZone")),
+    screenshotData,
     notes: formData.get("notes").trim(),
     createdAt: new Date().toISOString(),
   });
