@@ -234,6 +234,31 @@ textarea {
   color: var(--ink);
 }
 
+.story-copy {
+  max-width: 76ch;
+}
+
+.screenshot-preview {
+  margin: 18px 0 0;
+}
+
+.screenshot-preview img {
+  display: block;
+  width: min(100%, 520px);
+  max-height: 360px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.screenshot-preview figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
 .chart-wrap {
   min-height: 320px;
   overflow: hidden;
