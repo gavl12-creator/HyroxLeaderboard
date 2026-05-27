@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym Hyrox Performance Leaderboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Gym event analytics</p>
+          <h1 id="page-title">Hyrox Performance Leaderboard</h1>
+          <p class="intro">
+            Capture finish times, Strava heart-rate context, and a short performance story for every athlete in your gym event.
+          </p>
+        </div>
+        <div class="hero-stats" aria-label="Leaderboard summary">
+          <div>
+            <span id="total-athletes">0</span>
+            <p>Athletes</p>
+          </div>
+          <div>
+            <span id="best-time">--:--</span>
+            <p>Best time</p>
+          </div>
+          <div>
+            <span id="avg-time">--:--</span>
+            <p>Average time</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Leaderboard workspace">
+        <form id="entry-form" class="entry-panel">
+          <h2>Add performance</h2>
+          <label>
+            Athlete name
+            <input id="athlete-name" name="athleteName" type="text" autocomplete="name" placeholder="e.g. Alex Carter" required />
+          </label>
+          <div class="field-grid">
+            <label>
+              Finish hours
+              <input id="finish-hours" name="finishHours" type="number" min="0" max="5" value="1" required />
+            </label>
+            <label>
+              Finish minutes
+              <input id="finish-minutes" name="finishMinutes" type="number" min="0" max="59" value="15" required />
+            </label>
+            <label>
+              Finish seconds
+              <input id="finish-seconds" name="finishSeconds" type="number" min="0" max="59" value="0" required />
+            </label>
+          </div>
+          <div class="field-grid">
+            <label>
+              Avg heart rate
+              <input id="avg-hr" name="avgHr" type="number" min="80" max="220" placeholder="165" required />
+            </label>
+            <label>
+              Max heart rate
+              <input id="max-hr" name="maxHr" type="number" min="100" max="230" placeholder="188" required />
+            </label>
+            <label>
+              Time in red zone (%)
+              <input id="red-zone" name="redZone" type="number" min="0" max="100" placeholder="28" required />
+            </label>
+          </div>
+          <label>
+            Strava screenshot
+            <input id="screenshot" name="screenshot" type="file" accept="image/*" />
+          </label>
+          <label>
+            Notes from the attempt
+            <textarea id="notes" name="notes" rows="4" placeholder="e.g. Wall balls slowed down, strong ski, struggled after sled push"></textarea>
+          </label>
+          <button type="submit">Add to leaderboard</button>
+        </form>
+
+        <section class="analysis-panel" aria-labelledby="analysis-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Live insight</p>
+              <h2 id="analysis-title">Performance story</h2>
+            </div>
+            <button id="seed-data" type="button" class="secondary-button">Load sample data</button>
+          </div>
+          <div id="story-output" class="story-output">
+            Add an athlete to generate a coaching-style breakdown of pacing, heart-rate efficiency, and likely performance upside.
+          </div>
+          <div class="chart-wrap">
+            <canvas id="leaderboard-chart" width="760" height="320" aria-label="Finish time compared with effort score"></canvas>
+          </div>
+        </section>
+      </section>
+
+      <section class="leaderboard-section" aria-labelledby="leaderboard-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Rankings</p>
+            <h2 id="leaderboard-title">Leaderboard</h2>
+          </div>
+          <button id="clear-data" type="button" class="danger-button">Clear local data</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Athlete</th>
+                <th>Finish</th>
+                <th>Avg HR</th>
+                <th>Red zone</th>
+                <th>Efficiency</th>
+                <th>Projected best</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <template id="empty-row-template">
+      <tr>
+        <td colspan="7" class="empty-state">No performances yet. Add the first event result above.</td>
+      </tr>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
