@@ -1,36 +1,61 @@
-# Hyrox Performance Leaderboard
+# HYROX Analytics Platform
 
-A lightweight browser app for tracking a gym Hyrox event. Athletes can submit their finish time, heart-rate data from Strava, a Strava screenshot, and notes from their attempt. The app ranks performances and generates a short coaching-style story about pacing, heart-rate efficiency, and possible upside.
+A Next.js MVP for a HYROX gym event analytics platform. It combines a Formula 1-style timing dashboard with Strava-inspired athlete analysis: leaderboard classification, station rankings, position progression, places gained/lost, strengths, weaknesses, and AI-style race summaries.
+
+## Stack
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Recharts
 
 ## Features
 
-- Finish-time leaderboard ranked fastest to slowest
-- Event summary showing athlete count, best time, and average time
-- Heart-rate efficiency score using average HR, max HR, and red-zone percentage
-- Projected best-time estimate based on how aggressively or inefficiently the effort was paced
-- Storytelling analysis for the latest submitted athlete
-- Strava screenshot preview stored locally in the browser
-- Sample data button for quick demos
-- No backend required
+- Leaderboard page with 50 mock athletes
+- Athlete profile pages at `/athletes/[slug]`
+- Full HYROX station-by-station splits
+- Station leaderboards for every race segment
+- Position progression charts
+- Places gained and lost during the race
+- Strength and weakness analysis per athlete
+- Projected best-time model
+- AI race summary component using deterministic analytics text
+- Dark timing-dashboard UI inspired by Formula 1 race control and Strava activity analytics
 
-## How it works
+## Getting Started
 
-Open `index.html` in a browser, enter an athlete result, and click **Add to leaderboard**. Data is saved in browser `localStorage`, so it stays on that device and browser until cleared.
+Install dependencies:
 
-The screenshot upload is used as a visual reference in the story panel. The current version does not automatically read numbers from the image, so the Strava heart-rate values should be typed into the form.
+```bash
+npm install
+```
 
-## Publishing with GitHub Pages
+Run the development server:
 
-1. Go to the repository settings.
-2. Open **Pages**.
-3. Set the source to deploy from the `main` branch.
-4. Choose the repository root as the folder.
-5. Save and wait for GitHub to publish the site.
+```bash
+npm run dev
+```
 
-## Future ideas
+Open [http://localhost:3000](http://localhost:3000) to view the leaderboard.
 
-- Add user accounts or a shared database so everyone sees the same leaderboard
-- Add OCR for Strava screenshots to read heart-rate values automatically
-- Split leaderboard by gender, age group, relay pairs, or scaled divisions
-- Add station-by-station splits for richer Hyrox analysis
-- Export results to CSV
+## Useful Commands
+
+```bash
+npm run build
+npm run typecheck
+npm run lint
+```
+
+## Project Structure
+
+- `app/page.tsx` - leaderboard dashboard route
+- `app/athletes/[slug]/page.tsx` - athlete profile route
+- `components/DashboardClient.tsx` - charts and leaderboard UI
+- `components/AthleteProfileClient.tsx` - athlete analytics UI
+- `lib/data.ts` - deterministic mock dataset for 50 athletes
+- `lib/analytics.ts` - rankings, progression, strengths, weaknesses, summaries
+- `lib/types.ts` - shared TypeScript types
+
+## Notes
+
+This MVP uses mock data and a deterministic summary generator. A production version could add authentication, athlete uploads, Strava API imports, screenshot OCR, a database, and real LLM-generated summaries.
