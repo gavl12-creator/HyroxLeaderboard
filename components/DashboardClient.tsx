@@ -48,7 +48,7 @@ export function DashboardClient({ athletes, stationRankings }: DashboardClientPr
           <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px] lg:items-end">
             <div>
               <h1 className="max-w-4xl text-5xl font-black leading-[0.92] tracking-normal text-white sm:text-7xl">
-                Gym leaderboard with race intelligence.
+                Hyrox Sim Leaderboard Race with Intelligence
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300">
                 A Formula 1 inspired timing wall for HYROX: total ranking, station pace, position movement, strengths, weaknesses, and AI-style race summaries.
