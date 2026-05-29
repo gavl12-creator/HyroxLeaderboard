@@ -3,16 +3,15 @@ import { AthleteProfileClient } from "@/components/AthleteProfileClient";
 import { getAthleteBySlug, getRankedAthletes } from "@/lib/analytics";
 
 type AthletePageProps = {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 };
 
 export function generateStaticParams() {
   return getRankedAthletes().map((athlete) => ({ slug: athlete.slug }));
 }
 
-export async function generateMetadata({ params }: AthletePageProps) {
-  const { slug } = await params;
-  const athlete = getAthleteBySlug(slug);
+export function generateMetadata({ params }: AthletePageProps) {
+  const athlete = getAthleteBySlug(params.slug);
 
   if (!athlete) {
     return {
@@ -26,9 +25,8 @@ export async function generateMetadata({ params }: AthletePageProps) {
   };
 }
 
-export default async function AthletePage({ params }: AthletePageProps) {
-  const { slug } = await params;
-  const athlete = getAthleteBySlug(slug);
+export default function AthletePage({ params }: AthletePageProps) {
+  const athlete = getAthleteBySlug(params.slug);
 
   if (!athlete) notFound();
 
