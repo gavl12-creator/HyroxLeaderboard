@@ -22,6 +22,8 @@ export type StationSplit = {
   seconds: number;
 };
 
+export type WeightDivision = "Open Weights" | "Pro Weights";
+
 export type Athlete = {
   id: number;
   slug: string;
@@ -29,6 +31,7 @@ export type Athlete = {
   bib: number;
   ageGroup: string;
   division: "Open" | "Pro" | "Doubles";
+  weightDivision: WeightDivision;
   gym: string;
   avatarHue: number;
   averageHeartRate: number;
