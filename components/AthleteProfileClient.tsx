@@ -54,7 +54,7 @@ export function AthleteProfileClient({ athlete }: AthleteProfileClientProps) {
             </div>
             <div>
               <h1 className="text-5xl font-black leading-none text-white sm:text-6xl">{athlete.name}</h1>
-              <p className="mt-2 text-slate-400">Bib #{athlete.bib} · {athlete.division} · {athlete.ageGroup} · {athlete.gym}</p>
+              <p className="mt-2 text-slate-400">Bib #{athlete.bib} - {athlete.division} - {athlete.ageGroup} - {athlete.gym}</p>
             </div>
           </div>
         </div>
