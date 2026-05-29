@@ -20,6 +20,20 @@ type DashboardClientProps = {
   stationRankings: StationRanking[];
 };
 
+function getDivisionBadgeClasses(division: RankedAthlete["division"]) {
+  const baseClasses = "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.14em]";
+
+  if (division === "Pro") {
+    return `${baseClasses} border-orange-400/35 bg-orange-500/15 text-orange-300`;
+  }
+
+  if (division === "Doubles") {
+    return `${baseClasses} border-purple-400/35 bg-purple-500/15 text-purple-300`;
+  }
+
+  return `${baseClasses} border-blue-400/35 bg-blue-500/15 text-blue-300`;
+}
+
 export function DashboardClient({ athletes, stationRankings }: DashboardClientProps) {
   const leader = athletes[0];
   const averageSeconds = Math.round(athletes.reduce((sum, athlete) => sum + athlete.totalSeconds, 0) / athletes.length);
@@ -104,10 +118,13 @@ export function DashboardClient({ athletes, stationRankings }: DashboardClientPr
                   <tr key={athlete.slug} className="border-t border-white/10 hover:bg-white/[0.035]">
                     <td className="border-t border-white/10 py-3 font-mono text-lg font-black text-white">{athlete.rank}</td>
                     <td className="border-t border-white/10 py-3">
-                      <Link href={`/athletes/${athlete.slug}`} className="font-bold text-white hover:text-energy">
-                        {athlete.name}
-                      </Link>
-                      <div className="text-xs text-slate-500">#{athlete.bib} - {athlete.division} - {athlete.ageGroup}</div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link href={`/athletes/${athlete.slug}`} className="font-bold text-white hover:text-energy">
+                          {athlete.name}
+                        </Link>
+                        <span className={getDivisionBadgeClasses(athlete.division)}>{athlete.division}</span>
+                      </div>
+                      <div className="mt-1 text-xs text-slate-500">#{athlete.bib} - {athlete.division} - {athlete.ageGroup}</div>
                     </td>
                     <td className="border-t border-white/10 py-3 timing-cell">{formatDuration(athlete.totalSeconds)}</td>
                     <td className="border-t border-white/10 py-3 timing-cell">+{formatDuration(athlete.totalSeconds - leader.totalSeconds)}</td>
