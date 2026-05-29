@@ -107,7 +107,7 @@ export function DashboardClient({ athletes, stationRankings }: DashboardClientPr
                       <Link href={`/athletes/${athlete.slug}`} className="font-bold text-white hover:text-energy">
                         {athlete.name}
                       </Link>
-                      <div className="text-xs text-slate-500">#{athlete.bib} · {athlete.division} · {athlete.ageGroup}</div>
+                      <div className="text-xs text-slate-500">#{athlete.bib} - {athlete.division} - {athlete.ageGroup}</div>
                     </td>
                     <td className="border-t border-white/10 py-3 timing-cell">{formatDuration(athlete.totalSeconds)}</td>
                     <td className="border-t border-white/10 py-3 timing-cell">+{formatDuration(athlete.totalSeconds - leader.totalSeconds)}</td>
@@ -161,7 +161,7 @@ export function DashboardClient({ athletes, stationRankings }: DashboardClientPr
               <LineChart data={progressionData} margin={{ left: 12, right: 12, top: 12, bottom: 12 }}>
                 <CartesianGrid stroke="rgba(255,255,255,0.08)" />
                 <XAxis dataKey="station" stroke="#94a3b8" fontSize={10} interval={1} angle={-35} textAnchor="end" height={80} />
-                <YAxis reversed domain={[1, 12]} stroke="#94a3b8" fontSize={11} />
+                <YAxis reversed domain={[1, athletes.length]} stroke="#94a3b8" fontSize={11} />
                 <Tooltip contentStyle={{ background: "#0b1018", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12 }} />
                 {progressionAthletes.map((athlete, index) => (
                   <Line key={athlete.slug} type="monotone" dataKey={athlete.name} stroke={["#b8ff3d", "#fc4c02", "#38bdf8", "#facc15", "#c084fc"][index]} strokeWidth={3} dot={false} />
